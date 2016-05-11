@@ -7,7 +7,7 @@ Prototipo  simples composto por um ESP8266(NodeMCU) mais um sensor de temperatur
 Utilizei a plataforma de desenvolvimento [PlatformIO](http://platformio.org/)
 
 
-## Conectando ao Wifi
+### Conectando ao Wifi
 
 Para fazer o ESP8266 se conectar a uma rede WiFi é necessário criar o arquivo abaixo:
 
