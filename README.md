@@ -6,6 +6,9 @@ Prototipo  simples composto por um ESP8266(NodeMCU) mais um sensor de temperatur
 
 Utilizei a plataforma de desenvolvimento [PlatformIO](http://platformio.org/)
 
+## v0.0.2
+
+Enfrentei problemas utilizando o PlatformIO + Atom, decidi converter o projeto para PlatformIO + Visual Studio. Aparentemente as coisas melhoraram.
 
 ### Conectando ao Wifi
 
