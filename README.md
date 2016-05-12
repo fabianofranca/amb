@@ -30,3 +30,7 @@ const char* Security::getPwd() {
   return "Senha da sua rede";
 }
 ```
+
+### [Protótipo V1](http://fritzing.org/projects/amb-prototype-1)
+
+<img src="http://fritzing.org/media/fritzing-repo/projects/a/amb-prototype-1/images/amb.png" width="350">
