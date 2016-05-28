@@ -4,3 +4,4 @@ Security.cpp
 Debug
 obj
 *.sln
+*.VC.*
