@@ -10,6 +10,14 @@ Utilizei a plataforma de desenvolvimento [PlatformIO](http://platformio.org/)
 
 Enfrentei problemas utilizando o PlatformIO + Atom, decidi converter o projeto para PlatformIO + Visual Studio. Aparentemente as coisas melhoraram.
 
+### Instalando Libraries
+
+```
+platformio lib install 19 // Adafruit-DHT
+platformio lib install 64 // Json
+platformio lib install 89 // PubSubClient - MQTT
+```
+
 ### Conectando ao Wifi
 
 Para fazer o ESP8266 se conectar a uma rede WiFi é necessário criar o arquivo abaixo:
