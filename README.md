@@ -10,6 +10,10 @@ Utilizei a plataforma de desenvolvimento [PlatformIO](http://platformio.org/)
 
 Enfrentei problemas utilizando o PlatformIO + Atom, decidi converter o projeto para PlatformIO + Visual Studio. Aparentemente as coisas melhoraram.
 
+## v0.0.3
+
+Atualização de documentação.
+
 ### Instalando Libraries
 
 ```
