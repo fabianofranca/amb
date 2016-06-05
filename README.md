@@ -14,6 +14,10 @@ Enfrentei problemas utilizando o PlatformIO + Atom, decidi converter o projeto p
 
 Atualização de documentação.
 
+## v0.1.0 [WIP]
+
+O webserver foi removido. Foi adicionado suporte ao MQTT usando o plano gratuito do Bluemix.
+
 ### Instalando Libraries
 
 ```
