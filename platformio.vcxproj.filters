@@ -23,7 +23,7 @@
     <ClCompile Include="lib\Bluemix\src\Bluemix.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="lib\DhtClient\DhtClient.cpp">
+    <ClCompile Include="lib\DhtClient\src\DhtClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -34,7 +34,7 @@
     <ClInclude Include="lib\Bluemix\src\Bluemix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lib\DhtClient\DhtClient.h">
+    <ClInclude Include="lib\DhtClient\src\DhtClient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
