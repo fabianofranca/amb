@@ -1,8 +1,8 @@
-#include <ESP8266WiFi.h>
 #include <Security.h>
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
 #include <DhtClient.h>
+#include <WiFiHelper.h>
 
 #define DHTPIN 5
 #define DHTTYPE DHT22
@@ -21,6 +21,7 @@ char clientId[] = "d:" ORG ":" DEVICE_TYPE ":" DEVICE_ID;
 const char publishTopic[] = "iot-2/evt/status/fmt/json";
 
 Security security;
+WifiHelper wifiHelper(security.getSsid(), security.getPwd());
 DhtClient dhtClient(DHTPIN, DHTTYPE);
 WiFiClient wifiClient;
 
@@ -32,24 +33,6 @@ void callback(char* topic, byte* payload, unsigned int payloadLength) {
 PubSubClient mqttClient(server, 1883, callback, wifiClient);
 
 int publishInterval = 30000;
-
-void wifiConnect() {
-	WiFi.begin(security.getSsid(), security.getPwd());
-
-	Serial.println("");
-
-	// Wait for connection
-	while (WiFi.status() != WL_CONNECTED) {
-		delay(500);
-		Serial.print(".");
-	}
-
-	Serial.println("");
-	Serial.print("Connected to ");
-	Serial.println(security.getSsid());
-	Serial.print("IP address: ");
-	Serial.println(WiFi.localIP());
-}
 
 void mqttConnect() {
 	if (!mqttClient.connected()) {
@@ -67,7 +50,7 @@ void mqttConnect() {
 
 void setup() {
 	Serial.begin(9600);
-	wifiConnect();
+	wifiHelper.connect();
 	dhtClient.setup();
 	mqttConnect();
 }

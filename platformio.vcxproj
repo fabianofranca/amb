@@ -62,11 +62,13 @@
     <ClCompile Include="lib\Bluemix\src\Bluemix.cpp" />
     <ClCompile Include="lib\DhtClient\src\DhtClient.cpp" />
     <ClCompile Include="lib\Security\src\Security.cpp" />
+    <ClCompile Include="lib\WifiHelper\src\WifiHelper.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib\Bluemix\src\Bluemix.h" />
     <ClInclude Include="lib\DhtClient\src\DhtClient.h" />
     <ClInclude Include="lib\Security\src\Security.h" />
+    <ClInclude Include="lib\WifiHelper\src\WifiHelper.h" />
   </ItemGroup>
 </Project>

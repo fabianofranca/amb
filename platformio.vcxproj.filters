@@ -26,6 +26,9 @@
     <ClCompile Include="lib\DhtClient\src\DhtClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="lib\WifiHelper\src\WifiHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib\Security\src\Security.h">
@@ -35,6 +38,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="lib\DhtClient\src\DhtClient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\WifiHelper\src\WifiHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
