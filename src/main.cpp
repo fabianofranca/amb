@@ -1,89 +1,107 @@
 #include <ESP8266WiFi.h>
-#include <WiFiClient.h>
-#include <ESP8266WebServer.h>
-#include <ESP8266mDNS.h>
-#include <DHT.h>
-#include <Ticker.h>
 #include <Security.h>
+#include <PubSubClient.h>
+#include <ArduinoJson.h>
+#include <DhtClient.h>
 
 #define DHTPIN 5
 #define DHTTYPE DHT22
 
+#define ORG "v0u23l"
+#define DEVICE_TYPE "ESP8266"
+#define DEVICE_ID "Prototipo"
+#define TOKEN "K1YVb3Nm63Pw9P469D39qvfw4c49nD37"
+
+char server[] = ORG ".messaging.internetofthings.ibmcloud.com";
+char authMethod[] = "use-token-auth";
+char token[] = TOKEN;
+char clientId[] = "d:" ORG ":" DEVICE_TYPE ":" DEVICE_ID;
+
+//iot-2/evt/<event-id>/fmt/<format>
+const char publishTopic[] = "iot-2/evt/status/fmt/json";
+
 Security security;
-ESP8266WebServer server(80);
-DHT dht(DHTPIN, DHTTYPE);
-Ticker ticker;
+DhtClient dhtClient(DHTPIN, DHTTYPE);
+WiFiClient wifiClient;
 
-bool wait = false;
-
-void waiting() {
-  if (wait) {
-    wait = false;
-    ticker.detach();
-    Serial.println("ready for read!");
-  } else {
-    wait = true;
-    Serial.println("Wating to read...");
-    ticker.attach(2, waiting);
-  }
+void callback(char* topic, byte* payload, unsigned int payloadLength) {
+	Serial.print("callback invoked for topic: ");
+	Serial.println(topic);
 }
 
-void handle() {
-  if (!wait) {
-    float h = dht.readHumidity();
-    float t = dht.readTemperature();
-    waiting();
+PubSubClient mqttClient(server, 1883, callback, wifiClient);
 
-    if (isnan(h) || isnan(t)) {
-      server.send(200, "text/plain", "Falha ao ler o sensor DHT!");
-      return;
-    } else {
-      float hic = dht.computeHeatIndex(t, h, false);
+int publishInterval = 30000;
 
-      String message = "Umidade: " + String(h) + String('%');
-      message += " Temperatura: " + String(t) + " *C";
-      message += " Indice de calor: " + String(hic) + " *C";
+void wifiConnect() {
+	WiFi.begin(security.getSsid(), security.getPwd());
 
-      server.send(200, "text/plain", message);
-    }
-  } else {
-    server.send(200, "text/plain", "Atualize mais uma vez!");
-    return;
-  }
+	Serial.println("");
+
+	// Wait for connection
+	while (WiFi.status() != WL_CONNECTED) {
+		delay(500);
+		Serial.print(".");
+	}
+
+	Serial.println("");
+	Serial.print("Connected to ");
+	Serial.println(security.getSsid());
+	Serial.print("IP address: ");
+	Serial.println(WiFi.localIP());
+}
+
+void mqttConnect() {
+	if (!mqttClient.connected()) {
+		Serial.print("Reconnecting MQTT client to ");
+		Serial.println(server);
+
+		while (!mqttClient.connect(clientId, authMethod, token)) {
+			Serial.print(".");
+			delay(500);
+		}
+
+		Serial.println();
+	}
 }
 
 void setup() {
-  Serial.begin(9600);
-  WiFi.begin(security.getSsid(), security.getPwd());
+	Serial.begin(9600);
+	wifiConnect();
+	dhtClient.setup();
+	mqttConnect();
+}
 
-  Serial.println("");
+void publishData() {
+	float t = dhtClient.getData().temperatura;
+	float h = dhtClient.getData().humidity;
+	float hic = dhtClient.getData().heatIndex;
 
-  // Wait for connection
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
+	String payload = "{\"d\":{\"temperature\":";
+	payload += String(t) + ", ";
+	payload += "\"humidity\":";
+	payload += String(h) + ", ";
+	payload += "\"heatIndex\":";
+	payload += String(hic);
+	payload += "}}";
 
-  Serial.println("");
-  Serial.print("Connected to ");
-  Serial.println(security.getSsid());
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
+	Serial.print("Sending payload: ");
+	Serial.println(payload);
 
-  if (MDNS.begin("esp8266")) {
-    Serial.println("MDNS responder started");
-  }
-
-  server.on("/", handle);
-  server.onNotFound(handle);
-
-  server.begin();
-  Serial.println("HTTP server started");
-  dht.begin();
-  Serial.println("DHT22 sensor started");
-  waiting();
+	if (mqttClient.publish(publishTopic, (char*)payload.c_str())) {
+		Serial.println("Publish OK");
+	}
+	else {
+		Serial.println("Publish FAILED");
+	}
 }
 
 void loop() {
-  server.handleClient();
+	if (!mqttClient.loop()) {
+		mqttConnect();
+	}
+
+	publishData();
+
+	delay(publishInterval);
 }

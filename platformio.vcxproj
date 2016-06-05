@@ -59,6 +59,14 @@
     <None Include="platformio.ini" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="lib\Bluemix\src\Bluemix.cpp" />
+    <ClCompile Include="lib\DhtClient\DhtClient.cpp" />
+    <ClCompile Include="lib\Security\src\Security.cpp" />
     <ClCompile Include="src\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="lib\Bluemix\src\Bluemix.h" />
+    <ClInclude Include="lib\DhtClient\DhtClient.h" />
+    <ClInclude Include="lib\Security\src\Security.h" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,4 @@
+class Bluemix {
+public:
+	Bluemix();
+};
