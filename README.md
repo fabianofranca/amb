@@ -14,9 +14,10 @@ Enfrentei problemas utilizando o PlatformIO + Atom, decidi converter o projeto p
 
 Atualização de documentação.
 
-## v0.1.0 [WIP]
+## v0.1.0
 
 O webserver foi removido. Foi adicionado suporte ao MQTT usando o plano gratuito do Bluemix.
+Refatoração parcial do código. Foram criadas algumas "libs" para melhor organização do código.
 
 ### Instalando Libraries
 
@@ -30,20 +31,36 @@ platformio lib install 89 // PubSubClient - MQTT
 
 Para fazer o ESP8266 se conectar a uma rede WiFi é necessário criar o arquivo abaixo:
 
-*amb/lib/Security/src/Security.cpp*
+*amb/lib/Config/src/Config.cpp*
 
 ```
-#include "Security.h"
+#include "Config.h"
 
-Security::Security() {
+Config::Config() {
 }
 
-const char* Security::getSsid() {
+const char* Config::getSsid() {
   return "SSID da sua rede";
 }
 
-const char* Security::getPwd() {
+const char* Config::getPwd() {
   return "Senha da sua rede";
+}
+
+String Config::getOrg() {
+	return "ID da organização";
+}
+
+String Config::getDeviceType() {
+	return "Tipo de dispositivo";
+}
+
+String Config::getDeviceID() {
+	return "ID do dispositivo";
+}
+
+String Config::getToken() {
+	return "Token de autenticação";
 }
 ```
 
