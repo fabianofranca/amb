@@ -1,4 +1,5 @@
-#include <Security.h>
+#include <Arduino.h>
+#include <Config.h>
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
 #include <DhtClient.h>
@@ -7,21 +8,16 @@
 #define DHTPIN 5
 #define DHTTYPE DHT22
 
-#define ORG "v0u23l"
-#define DEVICE_TYPE "ESP8266"
-#define DEVICE_ID "Prototipo"
-#define TOKEN "K1YVb3Nm63Pw9P469D39qvfw4c49nD37"
+Config config;
 
-char server[] = ORG ".messaging.internetofthings.ibmcloud.com";
-char authMethod[] = "use-token-auth";
-char token[] = TOKEN;
-char clientId[] = "d:" ORG ":" DEVICE_TYPE ":" DEVICE_ID;
+String server = config.getOrg() + ".messaging.internetofthings.ibmcloud.com";
+const char* authMethod = "use-token-auth";
+String clientId = "d:" + config.getOrg() + ":" + config.getDeviceType() + ":" + config.getDeviceID();
 
 //iot-2/evt/<event-id>/fmt/<format>
 const char publishTopic[] = "iot-2/evt/status/fmt/json";
 
-Security security;
-WifiHelper wifiHelper(security.getSsid(), security.getPwd());
+WifiHelper wifiHelper(config.getSsid(), config.getPwd());
 DhtClient dhtClient(DHTPIN, DHTTYPE);
 WiFiClient wifiClient;
 
@@ -30,16 +26,17 @@ void callback(char* topic, byte* payload, unsigned int payloadLength) {
 	Serial.println(topic);
 }
 
-PubSubClient mqttClient(server, 1883, callback, wifiClient);
+PubSubClient mqttClient(server.c_str(), 1883, callback, wifiClient);
 
 int publishInterval = 30000;
 
 void mqttConnect() {
 	if (!mqttClient.connected()) {
 		Serial.print("Reconnecting MQTT client to ");
-		Serial.println(server);
+		Serial.println();
+		Serial.println(server.c_str());
 
-		while (!mqttClient.connect(clientId, authMethod, token)) {
+		while (!mqttClient.connect(clientId.c_str(), authMethod, config.getToken().c_str())) {
 			Serial.print(".");
 			delay(500);
 		}
@@ -50,6 +47,7 @@ void mqttConnect() {
 
 void setup() {
 	Serial.begin(9600);
+	Serial.println(config.getOrg());
 	wifiHelper.connect();
 	dhtClient.setup();
 	mqttConnect();
